@@ -79,14 +79,15 @@ function getLearnerData(course, ag, submissions) {
         throw new Error("Assignment group does not belong to the correct course.");
       }
     }
+    
+    // get the student id 
       result = []
     const submissionsByLearner = submissions.reduce((acc, submission) => {
       acc[submission.learner_id] = acc[submission.learner_id] || [];
       acc[submission.learner_id].push(submission);
       return acc;
       }, {});
-      console.log(submissionsByLearner);
-    }  
+      // console.log(submissionsByLearner);
     function calculateWeightedAverage(submissions) {
       let totalPoints = 0;
       let weightedSum = 0;
@@ -104,3 +105,4 @@ function getLearnerData(course, ag, submissions) {
   
       return totalPoints === 0 ? 0 : (weightedSum / totalPoints);
     }
+  } 
