@@ -81,7 +81,7 @@ function getLearnerData(course, ag, submissions) {
     }
     
     // get the student id 
-      result = []
+     const result = []
     const submissionsByLearner = submissions.reduce((acc, submission) => {
       acc[submission.learner_id] = acc[submission.learner_id] || [];
       acc[submission.learner_id].push(submission);
@@ -97,10 +97,10 @@ function getLearnerData(course, ag, submissions) {
            };
         
               // Iterate over assignments in the group
-            ag.assignments.forEach(assignment => {
+        ag.assignments.forEach(assignment => {
                 // Check if assignment is due and exists in learner submission
             const submission = learnerSubmissions.find(s => s.assignment_id === assignment.id);
-            if (submission && new Date(assignment.due_at) <= new Date()) {
+        if (submission && new Date(assignment.due_at) <= new Date()) {
               const lateSubmission = new Date(submission.submission.submitted_at) > new Date(assignment.due_at);
               const pointsPossible = assignment.points_possible === 0 ? 1 : assignment.points_possible;
               const score = lateSubmission ? Math.max(0, submission.submission.score - (0.1 * pointsPossible)) : submission.submission.score;
@@ -112,15 +112,21 @@ function getLearnerData(course, ag, submissions) {
             }
           }
         
-    ag.assignments.forEach(assignment => {
+       ag.assignments.forEach(assignment => {
       // Check if assignment is due and exists in learner submission
-      const submission = learnerSubmissions.find(s => s.assignment_id === assignment.id);
-      if (submission && new Date(assignment.due_at) <= new Date()) {
+       const submission = learnerSubmissions.find(s => s.assignment_id === assignment.id);
+       if (submission && new Date(assignment.due_at) <= new Date()) {
         const lateSubmission = new Date(submission.submission.submitted_at) > new Date(assignment.due_at);
         const pointsPossible = assignment.points_possible === 0 ? 1 : assignment.points_possible;
         const score = lateSubmission ? Math.max(0, submission.submission.score - (0.1 * pointsPossible)) : submission.submission.score;
         learnerData[assignment.id] = (score / pointsPossible);
-      }
-    });
+       }
+       });
+
+    return result;
   }
+  
+  const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
+  console.log(result);
+  
  
