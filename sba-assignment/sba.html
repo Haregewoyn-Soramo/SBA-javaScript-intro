@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SBA-javaScript</title>
+</head>
+<body>
+     <!-- <script src="/sba-assignment/sba.js"></script> -->
+     <!-- <script src="/sba-assignment/practice.js"></script> -->
+     <script src="/sba-assignment/own.js"></script>
+</body>
+</html>
+<!-- function getLearnerData(courseInfo, assignmentGroup, learnerSubmissions) {
+  // Validate course ID in assignment group
+  if (courseInfo.id !== assignmentGroup.course_id) {
+      throw new Error("Invalid input: Assignment group does not belong to the specified course.");
+  }
+
+  // Helper function to calculate weighted average
+  function calculateWeightedAverage(submissions) {
+      let totalPoints = 0;
+      let weightedSum = 0;
+
+      submissions.forEach(submission => {
+          const assignment = assignmentGroup.assignments.find(a => a.id === submission.assignment_id);
+          if (assignment && new Date(submission.submission.submitted_at) <= new Date(assignment.due_at)) {
+              const lateSubmission = new Date(submission.submission.submitted_at) > new Date(assignment.due_at);
+              const pointsPossible = assignment.points_possible === 0 ? 1 : assignment.points_possible;
+              const score = lateSubmission ? Math.max(0, submission.submission.score - (0.1 * pointsPossible)) : submission.submission.score;
+              totalPoints += pointsPossible;
+              weightedSum += (score / pointsPossible) * pointsPossible;
+          }
+      });
+
+      return totalPoints === 0 ? 0 : (weightedSum / totalPoints) * 100;
+  }
+
+  // Initialize result array
+  const result = [];
+
+  // Iterate over learner submissions
+  learnerSubmissions.forEach(submission => {
+      const learnerData = {
+          id: submission.learner_id,
+          avg: calculateWeightedAverage([submission]),
+      };
+
+      // Iterate over assignments in the group
+      assignmentGroup.assignments.forEach(assignment => {
+          // Check if assignment is due and exists in learner submission
+          if (new Date(assignment.due_at) <= new Date() && submission.assignment_id === assignment.id) {
+              const lateSubmission = new Date(submission.submission.submitted_at) > new Date(assignment.due_at);
+              const pointsPossible = assignment.points_possible === 0 ? 1 : assignment.points_possible;
+              const score = lateSubmission ? Math.max(0, submission.submission.score - (0.1 * pointsPossible)) : submission.submission.score;
+              learnerData[assignment.id] = (score / pointsPossible) * 100;
+          }
+      });
+
+      result.push(learnerData);
+  });
+
+  return result;
+}
+
+// Example usage:
+const courseInfo = { id: 1, name: "Course 1" };
+const assignmentGroup = {
+  id: 1,
+  name: "Assignment Group 1",
+  course_id: 1,
+  group_weight: 50,
+  assignments: [
+      { id: 1, name: "Assignment 1", due_at: "2024-04-01", points_possible: 100 },
+      { id: 2, name: "Assignment 2", due_at: "2024-04-05", points_possible: 200 }
+  ]
+};
+const learnerSubmissions = [
+  { learner_id: 1, assignment_id: 1, submission: { submitted_at: "2024-03-29", score: 80 } },
+  { learner_id: 1, assignment_id: 2, submission: { submitted_at: "2024-04-06", score: 180 } }
+];
+
+console.log(getLearnerData(courseInfo, assignmentGroup, learnerSubmissions)); -->
