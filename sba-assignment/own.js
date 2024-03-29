@@ -87,22 +87,40 @@ function getLearnerData(course, ag, submissions) {
       acc[submission.learner_id].push(submission);
       return acc;
       }, {});
-      // console.log(submissionsByLearner);
-    function calculateWeightedAverage(submissions) {
-      let totalPoints = 0;
-      let weightedSum = 0;
-  
-      submissions.forEach(submission => {
-        const assignment = ag.assignments.find(a => a.id === submission.assignment_id);
-        if (assignment && new Date(submission.submission.submitted_at) <= new Date(assignment.due_at)) {
-          const lateSubmission = new Date(submission.submission.submitted_at) > new Date(assignment.due_at);
-          const pointsPossible = assignment.points_possible === 0 ? 1 : assignment.points_possible;
-          const score = lateSubmission ? Math.max(0, submission.submission.score - (0.1 * pointsPossible)) : submission.submission.score;
-          totalPoints += pointsPossible;
-          weightedSum += (score / pointsPossible) * pointsPossible;
-        }
-      });
-  
-      return totalPoints === 0 ? 0 : (weightedSum / totalPoints);
-    }
-  } 
+      // console.log(submissionsByLearner);   
+    for (const learnerId in submissionsByLearner) {
+        if (submissionsByLearner.hasOwnProperty(learnerId)) {
+          const learnerSubmissions = submissionsByLearner[learnerId];
+           const learnerData = {
+           id: parseInt(learnerId),
+           avg: calculateWeightedAverage(learnerSubmissions)
+           };
+        
+              // Iterate over assignments in the group
+            ag.assignments.forEach(assignment => {
+                // Check if assignment is due and exists in learner submission
+            const submission = learnerSubmissions.find(s => s.assignment_id === assignment.id);
+            if (submission && new Date(assignment.due_at) <= new Date()) {
+              const lateSubmission = new Date(submission.submission.submitted_at) > new Date(assignment.due_at);
+              const pointsPossible = assignment.points_possible === 0 ? 1 : assignment.points_possible;
+              const score = lateSubmission ? Math.max(0, submission.submission.score - (0.1 * pointsPossible)) : submission.submission.score;
+              learnerData[assignment.id] = (score / pointsPossible);
+              }
+              });
+        
+              result.push(learnerData);
+            }
+          }
+        
+    ag.assignments.forEach(assignment => {
+      // Check if assignment is due and exists in learner submission
+      const submission = learnerSubmissions.find(s => s.assignment_id === assignment.id);
+      if (submission && new Date(assignment.due_at) <= new Date()) {
+        const lateSubmission = new Date(submission.submission.submitted_at) > new Date(assignment.due_at);
+        const pointsPossible = assignment.points_possible === 0 ? 1 : assignment.points_possible;
+        const score = lateSubmission ? Math.max(0, submission.submission.score - (0.1 * pointsPossible)) : submission.submission.score;
+        learnerData[assignment.id] = (score / pointsPossible);
+      }
+    });
+  }
+ 
