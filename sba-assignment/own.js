@@ -75,18 +75,26 @@ const LearnerSubmissions = [
 function getLearnerData(course, ag, submissions) {
   //  check if the assignment group id matches the courseinfo
     function validateData(courseInfo, assignmentGroup) {
-      if (ag.course_id !== course.id) {
+      if (assignmentGroup.course_id !== courseInfo.id) {
         throw new Error("Assignment group does not belong to the correct course.");
       }
     }
     
-    // get the student id 
-     const result = []
-    const submissionsByLearner = submissions.reduce((acc, submission) => {
-      acc[submission.learner_id] = acc[submission.learner_id] || [];
-      acc[submission.learner_id].push(submission);
-      return acc;
-      }, {});
+    // Calculate weighted average
+    function calculateWeightedAverage(submissions) {
+      let totalPoints = 0;
+      let weightedSum = 0;
+  
+      submissions.forEach(submission => {
+        const assignment = ag.assignments.find(a => a.id === submission.assignment_id);
+        if (assignment && new Date(submission.submission.submitted_at) <= new Date(assignment.due_at)) {
+          const lateSubmission = new Date(submission.submission.submitted_at) > new Date(assignment.due_at);
+          const pointsPossible = assignment.points_possible === 0 ? 1 : assignment.points_possible;
+          const score = lateSubmission ? Math.max(0, submission.submission.score - (0.1 * pointsPossible)) : submission.submission.score;
+          totalPoints += pointsPossible;
+          weightedSum += (score / pointsPossible) * pointsPossible;
+        }
+      });
       // console.log(submissionsByLearner);   
     for (const learnerId in submissionsByLearner) {
         if (submissionsByLearner.hasOwnProperty(learnerId)) {
@@ -126,7 +134,7 @@ function getLearnerData(course, ag, submissions) {
     return result;
   }
   
-  const result = getLearnerData(CourseInfo, AssignmentGroup, LearnerSubmissions);
+  const result = getLearnerData(course, ag, submissions);
   console.log(result);
   
  
