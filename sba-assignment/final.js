@@ -285,6 +285,7 @@ function getLearnerData(course, ag, submissions) {
     acc[submission.learner_id].push(submission);
     return acc;
   }, {});
+  console.log(submissionsByLearner)
 
   // Iterate over learner submissions
   for (const learnerId in submissionsByLearner) {

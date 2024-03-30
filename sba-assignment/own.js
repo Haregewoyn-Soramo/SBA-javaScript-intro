@@ -93,9 +93,33 @@ function getLearnerData(course, ag, submissions) {
     });
     return totalPoints === 0 ? 0 : weightedSum / totalPoints;
   }
+  console.log(calculateWeightedAverage)
   const result = [];
   const submissionsByLearner = submissions.reduce((acc,submission) => {
     acc[submission.learner_id] = acc[submission.learner_id] || [];
     acc[submission.learner_id].push(submission);
     return acc;
   },{});
+  console.log(submissionsByLearner)
+   for (const learnerId in submissionsByLearner){
+       if (submissionsByLearner.hasOwnProperty(learnerId)){
+          const learnerSubmissions = submissionsByLearner[learnerId]
+          const learnerData = {
+            id: parseInt(learnerId),
+            avg: calculateWeightedAverage(learnerSubmissions)
+          };
+          ag.assignments.forEach(assignment =>{
+            const submission = learnerSubmissions.find(s => s.assignment_id === assignment.id);
+            if (submission && new Date(assignment.due_at) <= new Date(){
+             const lateSubmission = new Date(submission.submission.submitted_at) > new Date(assignment.due_at);
+             const pointsPossible = assignment.points_possible === 0 ? 1 : assignment.points_Possible;
+             const score = lateSubmission ? Math.max(0,submission.submission.score-(0.1*pointsPossible)) : submission.submission.score
+             learnerData[assignment.id] =(score/pointsPossible);
+          })
+          result.push(learnerData)
+       }
+   }
+      return result;
+  }
+  const result(CourseInfo,AssignmentGroup,LearnerSubmissions);
+  console.log(result);
