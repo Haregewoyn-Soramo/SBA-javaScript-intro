@@ -91,3 +91,11 @@ function getLearnerData(course, ag, submissions) {
       totalPoints += pointsPossible;
       weightedSum += (score/pointsPossible)*pointsPossible;
     });
+    return totalPoints === 0 ? 0 : weightedSum / totalPoints;
+  }
+  const result = [];
+  const submissionsByLearner = submissions.reduce((acc,submission) => {
+    acc[submission.learner_id] = acc[submission.learner_id] || [];
+    acc[submission.learner_id].push(submission);
+    return acc;
+  },{});
