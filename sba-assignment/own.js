@@ -79,4 +79,15 @@ function getLearnerData(course, ag, submissions) {
         throw new Error("Assignment group does not belong to the correct course.");
       }
     }
- 
+     // Calculate weighted average
+  function calculateWeightedAverage(submissions) {
+    let totalPoints = 0;
+    let weightedSum = 0;
+    submissions.forEach(submission => {
+      const assignment = ag.assignments.find(a => a.id = submission.assignment_id)
+      if(assignment && new Date(submission.submission.submitted_at) <= new Date (assignment. due_at))
+      const pointsPossible = assignment.points_possible === 0 ? 1 : assignment.points_Possible;
+      const score = lateSubmission ? Math.max(0,submission.submission.score-(0.1*pointsPossible)) : submission.submission.score;
+      totalPoints += pointsPossible;
+      weightedSum += (score/pointsPossible)*pointsPossible;
+    });
